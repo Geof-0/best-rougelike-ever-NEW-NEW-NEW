@@ -36,7 +36,7 @@
 #stats-display {
     width: 60%;
     height: auto;
-    background-color: rgba(49, 48, 48, 0.5);
+    background-color: rgba(49, 48, 48, 0.6);
 
     top: 70px;
 
@@ -83,13 +83,15 @@
     display: block;
     overflow: auto;
 
+
+
 }
 
 #game-title {
     width: 90%;
     height: 10%;
     text-align: center;
-    background-color: rgba(49, 48, 48, 0.5);
+    background-color: rgba(49, 48, 48, 0.8);
     border: 7px solid black;
 
     color: white;
@@ -111,6 +113,10 @@
     overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 .upgrade-display {
@@ -148,7 +154,7 @@
     font-size: 50px;
     color: white;
     margin-top: 20px;
-    background-color: rgba(49, 48, 48, 0.5)
+    background-color: rgba(49, 48, 48, 0.7)
 }
 
 #one-time-buy {
@@ -157,10 +163,12 @@
     margin-top: 20px;
     border-top: 7px solid black;
     border-bottom: 7px solid black;
-    background-color: rgb(40, 40, 40);
+    background-color: rgba(40, 40, 40, 0.8);
 
     display: flex;
     flex-wrap: wrap;
+
+    overflow: auto;
 }
 
 .one-time-buy-display {
@@ -208,6 +216,73 @@
     text-align: center;
     white-space: pre-wrap;
 }
+
+
+/* multi buy */
+
+#multi-buy {
+    background-color: rgba(40, 40, 40, 0.8);
+    height: 60%;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-inline: auto;
+    border-top: 7px solid black;
+    border-bottom: 7px solid black;
+
+    overflow: auto;
+}
+
+.multi-buy-purchasing {
+    margin-top: 20px;
+    width: 90%;
+    height: auto;
+    background-color: rgb(50, 50, 50);
+    margin-inline: auto;
+
+    display: block;
+
+    border: 5px solid black;
+}
+
+.multi-buy-title {
+    max-width: 80%;
+    background-color: rgb(40, 40, 40);
+    color: white;
+    margin-inline: auto;
+    margin-top: 10px;
+    text-align: center;
+    border: 3px solid black;
+    font-size: 20px;
+}
+
+.multi-buy-details {
+    margin-top: 10px;
+    max-width: 80%;
+    margin-inline: auto;
+    
+    text-align: center;
+    color: white;
+    font-size: 16px;
+}
+
+.multi-buy-purchasor {
+    margin-top: 10px;
+    background-color: greenyellow;
+    max-width: 80%;
+    text-align: center;
+    margin-inline: auto;
+    color: black;
+    border: 5px solid black;
+    margin-bottom: 10px;
+}
+
+
+
+
+
+
+
 
 
 

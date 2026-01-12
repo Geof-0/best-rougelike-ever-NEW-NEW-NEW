@@ -85,7 +85,7 @@ class upgradeDisplay{
     constructor(backgroundSrc, upgradeSrc){
         this.element = document.createElement('div');
         this.element.classList.add("upgrade-display-element");
-        this.element.style.backgroundImage = backgroundSrc;
+        this.element.style.backgroundImage = `url(${backgroundSrc})`
 
         this.upgradeSrc = upgradeSrc
 
@@ -174,9 +174,49 @@ class singleBuyUpgrade{
     }
 }
 
+const multi_buy_menu = document.getElementById('multi-buy')
+
 class multiBuyUpgrade{
-    constructor(){
+    constructor(cost, cost_multiplier, backgroundSrc, itemSrc, title, details){
+        this.cost = cost
+        this.cost_multiplier = cost_multiplier
+        this.amountPurchased = 0
+        this.display = new upgradeDisplay(backgroundSrc, itemSrc);
+
+        this.purchasingElement = document.createElement("div")
+        this.purchasingElement.classList.add("multi-buy-purchasing")
+
+        this.purchasingTitle = document.createElement("div")
+        this.purchasingTitle.classList.add("multi-buy-title")
+        this.purchasingTitle.textContent = title
+        this.purchasingElement.appendChild(this.purchasingTitle)
+
+        this.purchasingDetails = document.createElement("div")
+        this.purchasingDetails.classList.add("multi-buy-details")
+        this.purchasingDetails.textContent = details
+        this.purchasingElement.appendChild(this.purchasingDetails)
+
+        this.purchasingPurchasor = document.createElement('div')
+        this.purchasingPurchasor.classList.add('multi-buy-purchasor')
+        this.purchasingPurchasor.textContent = `Cost: ${this.cost}`
+        this.purchasingElement.appendChild(this.purchasingPurchasor)
         
+        // click event listener
+        this.purchasingPurchasor.addEventListener('click', () => {
+            if (clicks < this.cost){
+                return
+            }
+
+            clicks -= this.cost
+            this.cost *= this.cost_multiplier
+            this.amountPurchased += 1
+            this.display.setUpgradeTo(this.amountPurchased)
+            update_upgrade_boosts()
+            this.purchasingPurchasor.textContent = `Cost: ${Math.ceil(this.cost)}`
+        });
+
+
+        multi_buy_menu.appendChild(this.purchasingElement)
     }
 }
 
@@ -205,8 +245,6 @@ async function update_upgrade_boosts(){
         click_gain += 1
     }
 
-
-
     if (midasTouch.isPurchased){
         click_gain *= 10
     }
@@ -214,6 +252,10 @@ async function update_upgrade_boosts(){
 
 
     // cps gain
+    CPS = 0
+    CPS += haybalesUpgrade.amountPurchased
+
+
 
 }
 
@@ -231,9 +273,7 @@ const midasTouch = new singleBuyUpgrade(10000, 'images/golden-clicker.png', 'The
 
 
 
-const horseUpgrade = new upgradeDisplay('', 'images/horse.png');
-
-horseUpgrade.setUpgradeTo(5)
+const haybalesUpgrade = new multiBuyUpgrade(5, 1.3, 'images/grassy-plains.png', 'images/haybale.png', 'Haybales', `+1 cps/ unit. who doesn't love some haybales?`)
 
 
 
