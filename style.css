@@ -1,0 +1,242 @@
+/* single element styling */
+
+
+#body {
+    background-color: black;
+}
+
+
+
+
+
+/* upgrades container */
+
+#clicking-container {
+    background-image: url('images/clicker-background.png');
+    border: 7px solid rgb(0, 0, 0);
+
+
+    aspect-ratio: 1/2;
+    width: 25%;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+#clicking-element {
+    width: 50%;
+    height: auto;
+    top: 160px;
+
+    z-index: 10;
+}
+
+#stats-display {
+    width: 60%;
+    height: auto;
+    background-color: rgba(49, 48, 48, 0.5);
+
+    top: 70px;
+
+    z-index: 10;
+}
+
+#clicks-counter {
+    font-size: 30px;
+    color: white;
+
+    text-align: center;
+}
+
+#CPS-counter {
+    font-size: 16px;
+    color: white;
+
+    text-align: center;
+}
+
+.horse-shine {
+    top: 30px;
+    width: 100%;
+    aspect-ratio: 1/1;
+    opacity: 0.5;
+    z-index: 9;
+}
+
+
+
+
+
+
+/* upgrades display */
+
+#upgrades-display {
+    top: 7px;
+    background-image: url('images/clicker-background.png');
+    border: 7px solid rgb(0, 0, 0);
+
+    width: 48%;
+    height: 96%;
+
+    display: block;
+    overflow: auto;
+
+}
+
+#game-title {
+    width: 90%;
+    height: 10%;
+    text-align: center;
+    background-color: rgba(49, 48, 48, 0.5);
+    border: 7px solid black;
+
+    color: white;
+    font-size: 70px;
+    margin-top: 20px;
+    margin-inline: auto;
+
+}
+
+.upgrade-display-element {
+    width: 90%;
+    height: 150px;
+    background-color: rgb(40, 40, 40); /* for testing */
+    border: 7px solid black;
+    
+    margin-inline: auto;
+    margin-top: 20px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.upgrade-display {
+    margin-left: 20px;
+    
+    height: calc(100% - 40px);
+    margin-top: 20px;
+    width: auto;
+}
+
+
+
+
+
+
+/* upgrades menu */
+
+#upgrades-menu {
+    right: 0%;
+    top: 7px;
+
+    height: calc(100% - 35px);
+    width: 25%;
+
+    position: absolute;
+
+    border: 7px solid black;
+    background-image: url('images/clicker-background.png');
+    display: block;
+
+}
+
+#store-title{
+    text-align: center;
+    font-size: 50px;
+    color: white;
+    margin-top: 20px;
+    background-color: rgba(49, 48, 48, 0.5)
+}
+
+#one-time-buy {
+    width: 100%;
+    height: 20%;
+    margin-top: 20px;
+    border-top: 7px solid black;
+    border-bottom: 7px solid black;
+    background-color: rgb(40, 40, 40);
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.one-time-buy-display {
+    width: 54px;
+    height: 54px;
+    margin-top: 10px;
+    margin-left: 10px;
+    border: 3px solid black;
+}
+
+.one-time-buy-hover {
+    height: auto;
+    width: 300px;
+    background-color: rgb(50, 50, 50);
+    border: 5px solid black;
+
+    position: absolute;
+    display: none;
+}
+
+.one-time-buy-title {
+    background-color: rgb(40, 40, 40);
+    border: 5px solid black;
+    max-width: 80%;
+    height: auto;
+    margin-inline: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    text-align: center;
+    font-size: 20px;
+    color: white;
+    display: block;
+}
+
+.one-time-buy-details {
+    max-width: 80%;
+    height: auto;
+    margin-inline: auto;
+    margin-bottom: 10px;
+
+
+    font-size: 12px;
+    color: white;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
+/* classes */
+
+.centered {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+.horizontally-centered {
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+}
+
+/* mini-horse :OOOO */
+
+.mini-horse {
+    width: 50px;
+    height: auto;
+    top: -100px;
+    position: absolute;
+    z-index: 1;
+}
+
