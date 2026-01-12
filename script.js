@@ -48,8 +48,8 @@ async function falling_horse(){
 const horse = document.getElementById("clicking-element");
 
 horse.addEventListener('click', () => {
-    clicks += click_gain;
-    update_display();
+
+    click_glide(300, click_gain)
 
     const button_click = new Audio('sounds/button-click.mp3')
     button_click.play();
@@ -113,6 +113,10 @@ const single_buy_menu = document.getElementById('one-time-buy')
 
 class singleBuyUpgrade{
     constructor(cost, displaySrc, hoverTitle, hoverDetails){
+
+        this.isPurchased = false
+        this.cost = cost
+
         this.purchasingElement = document.createElement("img")
         this.purchasingElement.src = displaySrc
         this.purchasingElement.classList.add("one-time-buy-display")
@@ -127,13 +131,12 @@ class singleBuyUpgrade{
 
         this.hoverOverElementDetails = document.createElement("div")
         this.hoverOverElementDetails.classList.add('one-time-buy-details')
-        this.hoverOverElementDetails.textContent = hoverDetails
+        this.hoverOverElementDetails.textContent = `Cost: ${this.cost}\n\n${hoverDetails}`
         this.hoverOverElement.appendChild(this.hoverOverElementDetails)
         
         document.body.appendChild(this.hoverOverElement)
 
-        this.isPurchased = false
-        this.cost = cost
+
 
         // hover-over event listener
         this.purchasingElement.addEventListener('mouseenter', () => {
@@ -161,12 +164,38 @@ class singleBuyUpgrade{
 
                 this.purchasingElement.remove()
                 this.hoverOverElement.remove()
+
+                const click_sound = new Audio('sounds/button-click.mp3')
+                click_sound.play()
             }
         });
 
         single_buy_menu.appendChild(this.purchasingElement)
     }
 }
+
+class multiBuyUpgrade{
+    constructor(){
+        
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 async function update_upgrade_boosts(){
     // click gain
@@ -175,13 +204,24 @@ async function update_upgrade_boosts(){
     if (friendUpgrade.isPurchased){
         click_gain += 1
     }
+
+
+
+    if (midasTouch.isPurchased){
+        click_gain *= 10
+    }
+
+
+
+    // cps gain
+
 }
 
 
 
 
-const friendUpgrade = new singleBuyUpgrade(5, 'images/horse.png', 'A fancy horse', '+1 click gain. Who wouldnt want a friend?')
-
+const friendUpgrade = new singleBuyUpgrade(20, 'images/horse.png', 'A friendly horse', '1 click gain. Who wouldnt want a friend?')
+const midasTouch = new singleBuyUpgrade(10000, 'images/golden-clicker.png', 'The midas touch', '*10 click gain. golden horses')
 
 
 
