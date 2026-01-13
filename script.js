@@ -80,6 +80,7 @@ horse.addEventListener('click', () => {
     const button_click = new Audio('sounds/button-click.mp3')
     button_click.play();
     falling_horse(3, 2);
+    click_display(click_gain);
 });
 
 
@@ -274,23 +275,32 @@ class multiBuyUpgrade{
 
 async function update_upgrade_boosts(){
     // click gain
+    // could also be visual updates
     click_gain = 1
 
     if (friendUpgrade.isPurchased){
         click_gain += 1
     }
 
-
-
-    if (midasTouch.isPurchased){
-        click_gain *= 10
+    // mouse upgrade
+    mouseClickGain = mouseUpgrade.amountPurchased
+    if(goldenMice.isPurchased){
+        mouseClickGain *= 2
+        goldenMice.display.upgradeSrc = 'images/golden-mouse.png'
+        goldenMice.display.setUpgradeTo(goldenMice.amountPurchased)
     }
 
 
+
+    // multiplier section
+    if (midasTouch.isPurchased){
+        click_gain *= 10
+    }
     // cps gain
     // also could be visual updates
     CPS = 0
 
+    // haybale upgrade
     haybaleCPS = haybalesUpgrade.amountPurchased
     if (betterHaybales.isPurchased){
         haybaleCPS *= 2
@@ -309,7 +319,8 @@ async function update_upgrade_boosts(){
 // single-buy-upgrades
 
 const friendUpgrade = new singleBuyUpgrade(20, 'images/horse.png', 'A friendly horse', '+1 click gain. Who wouldnt want a friend?')
-const betterHaybales = new singleBuyUpgrade(250, 'images/diamond-haybale.png', 'Diamond haybales' ,'*2 Haybale CPS. haybales get a "slight" upgrade')
+const goldenMice = new singleBuyUpgrade(250, 'images/golden-mouse.png', 'Golden mice', `*2 cursor CPS gain from mice. "I'VE STRUCK GOLD!"`)
+const betterHaybales = new singleBuyUpgrade(500, 'images/diamond-haybale.png', 'Diamond haybales' ,'*2 Haybale CPS. haybales get a "slight" upgrade')
 const midasTouch = new singleBuyUpgrade(10000, 'images/golden-clicker.png', 'The midas touch', '*10 click gain. horses become golden when clicked')
 
 
@@ -318,12 +329,9 @@ const midasTouch = new singleBuyUpgrade(10000, 'images/golden-clicker.png', 'The
 
 
 
+const mouseUpgrade = new multiBuyUpgrade(10, 1.5, 'images/technology-background.png', 'images/mouse.png', 'Mouses', '+1 cursor CPS/ unit. Some mouses to help you out')
 
-
-const haybalesUpgrade = new multiBuyUpgrade(5, 1.3, 'images/grassy-plains.png', 'images/haybale.png', 'Haybales', `+1 cps/ unit. who doesn't love some haybales?`)
-
-
-
+const haybalesUpgrade = new multiBuyUpgrade(20, 1.3, 'images/grassy-plains.png', 'images/haybale.png', 'Haybales', `+1 cps/ unit. who doesn't love some haybales?`)
 
 
 
@@ -337,6 +345,41 @@ const haybalesUpgrade = new multiBuyUpgrade(5, 1.3, 'images/grassy-plains.png', 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+async function click_display(click_gain){
+    const element = document.createElement("Div")
+    element.classList.add('click-display')
+    element.textContent = `+ ${click_gain}`
+    element.style.top = mouseTop
+    element.style.left = mouseLeft
+
+    document.body.appendChild(element)
+
+
+    for (let i= 0; i< 100; i++){
+        element.style.opacity = 1 - 0.02 * i
+        element.style.top = `${parseInt(element.style.top) - 0.1}px`
+        await wait(15)
+    }
+
+    element.remove()
+}
 
 
 
