@@ -289,6 +289,7 @@ async function update_upgrade_boosts(){
         goldenMice.display.upgradeSrc = 'images/golden-mouse.png'
         goldenMice.display.setUpgradeTo(goldenMice.amountPurchased)
     }
+    click_gain += mouseClickGain
 
 
 
@@ -307,7 +308,6 @@ async function update_upgrade_boosts(){
         haybalesUpgrade.display.upgradeSrc = 'images/diamond-haybale.png'
         haybalesUpgrade.display.setUpgradeTo(haybalesUpgrade.amountPurchased)
     }
-
     CPS += haybaleCPS
 
 
