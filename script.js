@@ -12,18 +12,44 @@ const clicking_container = document.getElementById('clicking-container');
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-function update_display(){
-    clicks_counter.textContent = `Clicks: ${Math.round(clicks)}`;
-    CPS_counter.textContent = `CPS: ${Math.round(CPS)}`
+
+
+const notations = ['', 'K', 'M', 'B', 'T', 'Qd', 'Qn', 'Sx', 'Sp', 'Oc', 'No']
+
+function toKMB(inputClicks){
+    let clicksToTransform = inputClicks;
+    for (let i= 0; i< notations.length; i++){
+        if (clicksToTransform / 1000 <= 1){
+            if (i > 1){
+                clicksToTransform = Math.round(clicksToTransform * 100) / 100
+            } else if (i == 1) {
+                clicksToTransform = Math.round(clicksToTransform * 10) / 10
+            } else {
+                clicksToTransform = Math.round(clicksToTransform)
+            }
+
+            return `${clicksToTransform}${notations[i]}`
+        } else {
+            clicksToTransform /= 1000
+        }
+    }
 }
 
-async function falling_horse(){
+
+
+function update_display(){
+    clicks_counter.textContent = `Clicks: ${toKMB(clicks)}`;
+    CPS_counter.textContent = `CPS: ${toKMB(CPS)}`
+}
+
+async function falling_horse(opacity_decrease, zIndex = 1){
     // initialization
     console.log('mini-horse function called')
     const element = document.createElement('img');
     element.src = 'images/horse.png';
     element.classList.add('mini-horse')
     element.style.left = `${Math.round(Math.random() * 90)}%`
+    element.style.zIndex = zIndex
     clicking_container.appendChild(element)
 
     console.log('horse initialized')
@@ -35,7 +61,7 @@ async function falling_horse(){
 
     while (currentOpacity >= 0){
         currentTop += 1
-        currentOpacity -= 0.0008
+        currentOpacity -= 0.001 * opacity_decrease
         element.style.top = `${currentTop}px`
         element.style.opacity = currentOpacity
         await wait(3);
@@ -53,7 +79,7 @@ horse.addEventListener('click', () => {
 
     const button_click = new Audio('sounds/button-click.mp3')
     button_click.play();
-    falling_horse();
+    falling_horse(3, 2);
 });
 
 
@@ -85,7 +111,8 @@ class upgradeDisplay{
     constructor(backgroundSrc, upgradeSrc){
         this.element = document.createElement('div');
         this.element.classList.add("upgrade-display-element");
-        this.element.style.backgroundImage = `url(${backgroundSrc})`
+        this.backgroundSrc = backgroundSrc
+        this.element.background
 
         this.upgradeSrc = upgradeSrc
 
@@ -95,8 +122,6 @@ class upgradeDisplay{
     setUpgradeTo(number){
         this.element.innerHTML = ''
 
-        
-
         for(let i= 0; i< number; i++){
             const element_to_add = document.createElement('img')
             element_to_add.src = this.upgradeSrc
@@ -104,6 +129,10 @@ class upgradeDisplay{
 
             this.element.appendChild(element_to_add)
             
+        }
+
+        if (number > 0){
+            this.element.style.backgroundImage = `url(${this.backgroundSrc})`
         }
     }
 }
@@ -131,7 +160,7 @@ class singleBuyUpgrade{
 
         this.hoverOverElementDetails = document.createElement("div")
         this.hoverOverElementDetails.classList.add('one-time-buy-details')
-        this.hoverOverElementDetails.textContent = `Cost: ${this.cost}\n\n${hoverDetails}`
+        this.hoverOverElementDetails.textContent = `Cost: ${toKMB(Math.ceil(this.cost))}\n\n${hoverDetails}`
         this.hoverOverElement.appendChild(this.hoverOverElementDetails)
         
         document.body.appendChild(this.hoverOverElement)
@@ -148,7 +177,7 @@ class singleBuyUpgrade{
 
             this.hoverOverElement.style.display = 'block'
             console.log('hovering over ' + this)
-            console.log(this.rect.top, this.rect.left)
+            console.log(rect.top, rect.left)
         });
 
         this.purchasingElement.addEventListener('mouseleave', () => {
@@ -165,8 +194,8 @@ class singleBuyUpgrade{
                 this.purchasingElement.remove()
                 this.hoverOverElement.remove()
 
-                const click_sound = new Audio('sounds/button-click.mp3')
-                click_sound.play()
+                const purchase_sound = new Audio('sounds/purchase-sound.mp3')
+                purchase_sound.play()
             }
         });
 
@@ -181,6 +210,7 @@ class multiBuyUpgrade{
         this.cost = cost
         this.cost_multiplier = cost_multiplier
         this.amountPurchased = 0
+        this.title = title
         this.display = new upgradeDisplay(backgroundSrc, itemSrc);
 
         this.purchasingElement = document.createElement("div")
@@ -188,7 +218,7 @@ class multiBuyUpgrade{
 
         this.purchasingTitle = document.createElement("div")
         this.purchasingTitle.classList.add("multi-buy-title")
-        this.purchasingTitle.textContent = title
+        this.purchasingTitle.textContent = this.title + ': 0'
         this.purchasingElement.appendChild(this.purchasingTitle)
 
         this.purchasingDetails = document.createElement("div")
@@ -212,7 +242,12 @@ class multiBuyUpgrade{
             this.amountPurchased += 1
             this.display.setUpgradeTo(this.amountPurchased)
             update_upgrade_boosts()
-            this.purchasingPurchasor.textContent = `Cost: ${Math.ceil(this.cost)}`
+            this.purchasingPurchasor.textContent = `Cost: ${toKMB(Math.ceil(this.cost))}`
+
+            this.purchasingTitle.textContent = this.title + ': ' + this.amountPurchased
+
+            const purchase_sound = new Audio('sounds/purchase-sound.mp3')
+            purchase_sound.play()
         });
 
 
@@ -245,25 +280,37 @@ async function update_upgrade_boosts(){
         click_gain += 1
     }
 
+
+
     if (midasTouch.isPurchased){
         click_gain *= 10
     }
 
 
-
     // cps gain
+    // also could be visual updates
     CPS = 0
-    CPS += haybalesUpgrade.amountPurchased
+
+    haybaleCPS = haybalesUpgrade.amountPurchased
+    if (betterHaybales.isPurchased){
+        haybaleCPS *= 2
+        haybalesUpgrade.display.upgradeSrc = 'images/diamond-haybale.png'
+        haybalesUpgrade.display.setUpgradeTo(haybalesUpgrade.amountPurchased)
+    }
+
+    CPS += haybaleCPS
 
 
 
+    update_display()
 }
 
 
+// single-buy-upgrades
 
-
-const friendUpgrade = new singleBuyUpgrade(20, 'images/horse.png', 'A friendly horse', '1 click gain. Who wouldnt want a friend?')
-const midasTouch = new singleBuyUpgrade(10000, 'images/golden-clicker.png', 'The midas touch', '*10 click gain. golden horses')
+const friendUpgrade = new singleBuyUpgrade(20, 'images/horse.png', 'A friendly horse', '+1 click gain. Who wouldnt want a friend?')
+const betterHaybales = new singleBuyUpgrade(250, 'images/diamond-haybale.png', 'Diamond haybales' ,'*2 Haybale CPS. haybales get a "slight" upgrade')
+const midasTouch = new singleBuyUpgrade(10000, 'images/golden-clicker.png', 'The midas touch', '*10 click gain. horses become golden when clicked')
 
 
 
@@ -293,19 +340,21 @@ const haybalesUpgrade = new multiBuyUpgrade(5, 1.3, 'images/grassy-plains.png', 
 
 
 
+async function horse_glide(ms, horses, opacity_decrease){
+    const interval = ms / horses
+    for (let i= 0; i< horses; i++){
+        falling_horse(opacity_decrease, 1);
+        await wait(interval);
+    }
+}
 
 
-
-
-
-
-
-async function click_glide(ms, click_increase){
-    const interval = click_increase / 20;
-    const time_interval = ms / 20
-    for (let i= 0; i < 20; i++){
+async function click_glide(ms, click_increase, opacity_decrease){
+    const interval = click_increase / 10;
+    const time_interval = ms / 10
+    for (let i= 0; i < 10; i++){
         clicks += interval
-        update_display();
+        update_display(opacity_decrease);
         await wait(time_interval)
     }
 }
@@ -331,6 +380,17 @@ async function shine_rotate_loop(){
 async function CPS_gain_loop(){
     while(true){
         await click_glide(1000, CPS)
+
+        let horsesPerSec = 0
+        let opacityDecrease = 1
+
+        if (Math.round(CPS ** 0.5) < 25){horsesPerSec += Math.round(CPS ** 0.5)} else {horsesPerSec += 25};
+        if (CPS ** 0.5 > 25){
+            if (Math.round(CPS ** (1/3)) < 25){horsesPerSec += Math.round(CPS ** 0.5)} else {horsesPerSec += 25};
+            opacityDecrease -= 0.3
+        }
+
+        horse_glide(1000, horsesPerSec, opacityDecrease)
     }
 }
 
