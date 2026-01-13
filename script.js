@@ -2,7 +2,7 @@ console.log('js synced')
 
 let clicks = 0;
 let click_gain = 1;
-let CPS = 0;
+let CPS = 67;
 
 
 const clicks_counter = document.getElementById('clicks-counter');
@@ -273,6 +273,7 @@ class multiBuyUpgrade{
 
 
 
+
 async function update_upgrade_boosts(){
     // click gain
     // could also be visual updates
@@ -286,8 +287,8 @@ async function update_upgrade_boosts(){
     mouseClickGain = mouseUpgrade.amountPurchased
     if(goldenMice.isPurchased){
         mouseClickGain *= 2
-        goldenMice.display.upgradeSrc = 'images/golden-mouse.png'
-        goldenMice.display.setUpgradeTo(goldenMice.amountPurchased)
+        mouseUpgrade.display.upgradeSrc = 'images/golden-mouse.png'
+        mouseUpgrade.display.setUpgradeTo(mouseUpgrade.amountPurchased)
     }
     click_gain += mouseClickGain
 
@@ -314,6 +315,23 @@ async function update_upgrade_boosts(){
 
     update_display()
 }
+
+function updateBoosts(){
+    // do later
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // single-buy-upgrades
@@ -357,10 +375,29 @@ const haybalesUpgrade = new multiBuyUpgrade(20, 1.3, 'images/grassy-plains.png',
 
 
 
+// styling
+
+clicking_container.style.height = upgrades_display.style.height
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// functions
 
 async function click_display(click_gain){
     const element = document.createElement("Div")
