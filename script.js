@@ -2,7 +2,7 @@ console.log('js synced')
 
 let clicks = 0;
 let click_gain = 1;
-let CPS = 67;
+let CPS = 0;
 
 
 const clicks_counter = document.getElementById('clicks-counter');
