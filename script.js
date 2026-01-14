@@ -256,9 +256,88 @@ class multiBuyUpgrade{
     }
 }
 
+const boost_buy = document.getElementById("boosts-buy")
+
+class boostUpgrade{
+    constructor(cost, costMultiplier, boostTimeGain, displaySrc, hoverTitle, hoverDetails){
+
+        this.boostTime = 0
+        this.boostTimeGain = boostTimeGain
+        this.cost = cost
+        this.costMultiplier = costMultiplier
+        this.hoverDetails = hoverDetails
+        this.boostTrue = false
+
+        this.purchasingElement = document.createElement("img")
+        this.purchasingElement.src = displaySrc
+        this.purchasingElement.classList.add("one-time-buy-display")
+
+        this.hoverOverElement = document.createElement("div")
+        this.hoverOverElement.classList.add('one-time-buy-hover')
+        
+        this.hoverOverElementTitle = document.createElement("div")
+        this.hoverOverElementTitle.classList.add('one-time-buy-title')
+        this.hoverOverElementTitle.textContent = hoverTitle
+        this.hoverOverElement.appendChild(this.hoverOverElementTitle)
+
+        this.hoverOverElementDetails = document.createElement("div")
+        this.hoverOverElementDetails.classList.add('one-time-buy-details')
+        this.hoverOverElementDetails.textContent = `Cost: ${toKMB(Math.ceil(this.cost))}\nBoost length: 0:0\n\n${hoverDetails}`
+        this.hoverOverElement.appendChild(this.hoverOverElementDetails)
+        
+        document.body.appendChild(this.hoverOverElement)
 
 
 
+
+        // hover-over event listener
+        this.purchasingElement.addEventListener('mouseenter', () => {
+
+            // position
+            const rect = this.purchasingElement.getBoundingClientRect();
+            this.hoverOverElement.style.top =  `${rect.top + window.scrollY}px`
+            this.hoverOverElement.style.left = `${rect.left - 320 + window.scrollX}px`
+
+            this.hoverOverElement.style.display = 'block'
+            console.log('hovering over ' + this)
+            console.log(rect.top, rect.left)
+        });
+
+        this.purchasingElement.addEventListener('mouseleave', () => {
+            this.hoverOverElement.style.display = 'none'      
+            console.log('no longer hovering over ' + this)      
+        });
+
+        this.purchasingElement.addEventListener('click', () => {
+            if (clicks >= this.cost && !this.isPurchased){
+                clicks -= this.cost
+                this.cost *= this.costMultiplier
+                this.boostTime += this.boostTimeGain
+                this.boostTrue = true
+                update_upgrade_boosts()
+                this.updateBoostTime()
+                const purchase_sound = new Audio('sounds/purchase-sound.mp3')
+                purchase_sound.play()
+            }
+        });
+
+        boost_buy.appendChild(this.purchasingElement)
+        globalBoosts.push(this)
+    }
+
+    updateBoostTime(){
+        this.hoverOverElementDetails.textContent = `Cost: ${toKMB(Math.ceil(this.cost))}\nBoost length: ${toMS(Math.round(this.boostTime))}\n\n${this.hoverDetails}`
+    }
+}
+
+function toMS(seconds){
+    const minutes = Math.floor(seconds/ 60)
+    const displaySeconds = Math.floor(seconds - minutes * 60)
+    const time = `${minutes}:${displaySeconds}`
+    return time
+}
+
+let globalBoosts = []
 
 
 
@@ -292,12 +371,17 @@ async function update_upgrade_boosts(){
     }
     click_gain += mouseClickGain
 
-
-
-    // multiplier section
+        // multiplier section
     if (midasTouch.isPurchased){
         click_gain *= 10
     }
+
+
+
+
+
+
+
     // cps gain
     // also could be visual updates
     CPS = 0
@@ -313,11 +397,30 @@ async function update_upgrade_boosts(){
 
 
 
-    update_display()
-}
 
-function updateBoosts(){
-    // do later
+
+
+
+    // boosts
+
+    if (appleBoost.boostTrue){
+        click_gain *= 2
+        CPS *= 2
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    update_display()
 }
 
 
@@ -352,7 +455,7 @@ const mouseUpgrade = new multiBuyUpgrade(10, 1.5, 'images/technology-background.
 const haybalesUpgrade = new multiBuyUpgrade(20, 1.3, 'images/grassy-plains.png', 'images/haybale.png', 'Haybales', `+1 cps/ unit. who doesn't love some haybales?`)
 
 
-
+const appleBoost = new boostUpgrade(1, 2, 60, 'images/apple.png', 'Apple', '*2 clicks for 1 minute (time stacks). "I prefer pears"')
 
 
 
@@ -474,10 +577,37 @@ async function CPS_gain_loop(){
     }
 }
 
+async function boost_decrease_loop(){
+    while(true){
+        globalBoosts.forEach((object) => {
+            object.boostTime -= 1
+
+            if (object.boostTime < 0){
+                object.boostTime = 0
+                object.boostTrue = false
+            }
+            object.updateBoostTime()
+        })
+        await wait(1000)
+
+        update_upgrade_boosts()
+    }
+}
+
+
+
+
+
+
+
+
+
+
 async function initialize_loops(){
     // no await
     shine_rotate_loop();
     CPS_gain_loop();
+    boost_decrease_loop();
 }
 
 initialize_loops()
