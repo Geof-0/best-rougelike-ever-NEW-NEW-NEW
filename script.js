@@ -408,6 +408,16 @@ async function update_upgrade_boosts(){
         CPS *= 2
     }
 
+    if (yellowAppleBoost.boostTrue){
+        click_gain *= 2
+        CPS /= 2
+    }
+
+    if (greenAppleBoost.boostTrue){
+        click_gain /= 2
+        CPS *= 2
+    }
+
 
 
 
@@ -455,9 +465,9 @@ const mouseUpgrade = new multiBuyUpgrade(10, 1.5, 'images/technology-background.
 const haybalesUpgrade = new multiBuyUpgrade(20, 1.3, 'images/grassy-plains.png', 'images/haybale.png', 'Haybales', `+1 cps/ unit. who doesn't love some haybales?`)
 
 
-const appleBoost = new boostUpgrade(1, 2, 60, 'images/apple.png', 'Apple', '*2 clicks for 1 minute (time stacks). "I prefer pears"')
-
-
+const appleBoost = new boostUpgrade(1, 2, 60, 'images/apple.png', 'Red Apple', '*2 clicks for 1 minute (time stacks). "I prefer pears"')
+const yellowAppleBoost = new boostUpgrade(1, 2.5, 120, 'images/yellow-apple.png', 'Yellow Apple', '*2 cursor CPS for 2 minutes (time stacks), but /2 CPS for the same amount of time. "who needs buildings? I prefer manual labor"')
+const greenAppleBoost = new boostUpgrade(1, 2.5, 120, 'images/green-apple.png', 'Green Apple', '*2 CPS for 2 minutes (time stacks), but /2 cursor CPS for the same amount of time. "I prefer the easy life. Who cares about manual labor?"')
 
 
 
